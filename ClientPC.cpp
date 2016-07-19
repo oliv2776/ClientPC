@@ -1,5 +1,9 @@
-// ClientPC.cpp : définit le point d'entrée pour l'application console.
-//
+/*!
+*\file ClientPC.cpp
+*\brief Client PC to connect to the server
+*\author Olivier Deschênes
+*\version 0.1
+*/
 
 #include "stdafx.h"
 /*To avoid _WINSOCK_DEPRECATED_NO_WARNINGS error while compiling*/
