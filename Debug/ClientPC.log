@@ -1,4 +1,4 @@
-﻿  stdafx.cpp
-  ClientPC.cpp
+﻿  ClientPC.cpp
+c:\users\olivier\documents\visual studio 2015\projects\clientpc\clientpc\clientpc.cpp(49): warning C4101: 'buf' : variable locale non référencée
   ClientPC.vcxproj -> C:\Users\olivier\Documents\Visual Studio 2015\Projects\ClientPC\Debug\ClientPC.exe
   ClientPC.vcxproj -> C:\Users\olivier\Documents\Visual Studio 2015\Projects\ClientPC\Debug\ClientPC.pdb (Full PDB)
