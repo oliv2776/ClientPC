@@ -49,12 +49,29 @@ typedef struct sockaddr SOCKADDR;
 #define SIZETRAME SIZEDATA+30
 
 int formatbuffer(char buffer[],int nbPacket, int numberTotalOfPackets);
-int convertCharToInt(char charToConvert[], int index);
+/**
+* @brief convert a table of chars into int
+* @param char charToConvert[] the table to convert
+* @param int index: the index in the table of char where there is the lengh of the number to convert
+* @retval uint_32 return the error code: 0= no errors; 1= wrong switch numbe
+*/
+uint32_t convertCharToInt(char charToConvert[], int index);
+
+/**
+* @brief convert a Int into a table of char
+* @param char ConvertedInt[]: the table where the int will be put into
+* @param int indexTable: the index in the table of char where there is the lengh of the number to convert
+* @param uint32_t numberToConvert: the number to convert in the table of char
+* @retval void
+*/
+void convertIntToChar(char ConvertedInt[], int indexTable, uint32_t numberToConvert);
 
 int main()
 {
 	SOCKET sock;
 	SOCKADDR_IN sin;
+	SYSTEMTIME t;
+	GetSystemTime(&t);
 	char bufferServer[32] = "";// buffer for the commandes sent by the server
 	/*Signals sent: buffer[0]= board ID; buffer[1]=ADC number; 
 	buffer[2] = packet number; buffer[3] = total number of packets; 
@@ -65,9 +82,7 @@ int main()
 	for (int i = 0; i < SIZEDATA; i++) {
 		tempBuffer[i] = '0';
 	}
-	int timeConversion;
-	SYSTEMTIME t;
-	GetSystemTime(&t);
+	uint32_t timeConversion;
 	int index;
 
 #if defined (WIN32)
@@ -172,49 +187,57 @@ int main()
 	buffer[2] = ADC1;
 	int index = 3;
 	char buf[6];
-	sprintf(buf, "%d", nbPacket);
+	convertIntToChar(buf, 0, nbPacket);
 	for (int i = 0; i < 6; i++) {
 		printf("%c", buf[i]);
 		buffer[index] = buf[i];
 		index++;
 	}
-	sprintf(buf, "%d", numberTotalOfPackets);
+	
+	convertIntToChar(buf, 0, numberTotalOfPackets);
 	for (int i = 0; i < 6; i++) {
 		printf("%c", buf[i]);
 		buffer[index] = buf[i];
 		index++;
 	}
-	sprintf(buf, "%d", t.wDay);
+
+	convertIntToChar(buf, 0, t.wDay);
 	for (int i = 0; i < 2; i++) {
 		buffer[index] = buf[i];
 		index++;
 	}
-	sprintf(buf, "%d", t.wMonth);
+
+	convertIntToChar(buf, 0, t.wMonth);
 	for (int i = 0; i < 2; i++) {
 		buffer[index] = buf[i];
 		index++;
 	}
-	sprintf(buf, "%d", t.wYear);
+
+	convertIntToChar(buf, 0, t.wYear);
 	for (int i = 0; i < 4; i++) {
 		buffer[index] = buf[i];
 		index++;
 	}
-	sprintf(buf, "%d", t.wHour);
+
+	convertIntToChar(buf, 0, t.wHour);
 	for (int i = 0; i < 2; i++) {
 		buffer[index] = buf[i];
 		index++;
 	}
-	sprintf(buf, "%d", t.wMinute);
+
+	convertIntToChar(buf, 0, t.wMinute);
 	for (int i = 0; i < 2; i++) {
 		buffer[index] = buf[i];
 		index++;
 	}
-	sprintf(buf, "%d", t.wSecond);
+
+	convertIntToChar(buf, 0, t.wSecond);
 	for (int i = 0; i < 2; i++) {
 		buffer[index] = buf[i];
 		index++;
 	}
-	sprintf(buf, "%d", t.wMilliseconds);
+
+	convertIntToChar(buf, 0, t.wMilliseconds);
 	for (int i = 0; i < 2; i++) {
 		buffer[index] = buf[i];
 		index++;
@@ -222,8 +245,59 @@ int main()
 	return index;
 }
 
- int convertCharToInt(char charToConvert[], int index) {
-	 int result;
-	 result = charToConvert[index] * 127 + charToConvert[index + 1];
+ 
+ uint32_t convertCharToInt(char charToConvert[], int index)
+ {
+	 uint32_t result = 0;
+	 uint32_t temp = 0;
+
+	 int newIndex = charToConvert[index] - 48;
+	 /*Reconverting chars into int*/
+	 for (int i = index + 1; i < index + 1 + newIndex; i++) {
+		 charToConvert[i] = charToConvert[i] - 48;
+	 }
+	 printf("\n\n%d\n", index);
+	 printf("\n\n%d\n", newIndex);
+	 /*converting the char[] numbers into 1 int */
+	 for (int i = 0; i < index + 1 + charToConvert[index] - 48; i++)
+	 {
+		 temp = charToConvert[index + i + 1];
+
+		 for (int j = 0; j < newIndex - 2; j++)
+		 {
+			 temp = temp * 10;
+		 }
+		 newIndex--;
+		 result += temp;
+	 }
 	 return result;
+ }
+
+
+
+ void convertIntToChar(char ConvertedInt[], int indexTable, uint32_t numberToConvert) {
+	 uint32_t modulo;
+	 int newIndex = 0;
+	 char tempChar[16];
+
+	 do {
+		 modulo = numberToConvert % 10;
+		 tempChar[newIndex] = modulo + 48;
+		 newIndex++;
+		 numberToConvert /= 10;
+	 } while (numberToConvert);
+
+	 for (int i = 0; i<newIndex / 2; i++)
+	 {
+		 int tampon = tempChar[i];
+		 tempChar[i] = tempChar[newIndex - 1 - i];
+		 tempChar[newIndex - 1 - i] = tampon;
+	 }
+
+
+	 for (int i = 0; i < newIndex; i++) {
+		 ConvertedInt[i + indexTable + 1] = tempChar[i];
+	 }
+	 ConvertedInt[indexTable] = newIndex + 48;
+
  }
