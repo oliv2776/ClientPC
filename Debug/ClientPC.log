@@ -1,9 +1,18 @@
 ﻿  ClientPC.cpp
 c:\users\olivier\documents\visual studio 2015\projects\clientpc\clientpc\clientpc.cpp(13): warning C4005: '_CRT_SECURE_NO_WARNINGS' : redéfinition de macro
   c:\users\olivier\documents\visual studio 2015\projects\clientpc\clientpc\clientpc.cpp(13): note: arguments de ligne de commande : voir la définition précédente de '_CRT_SECURE_NO_WARNINGS'
-c:\users\olivier\documents\visual studio 2015\projects\clientpc\clientpc\clientpc.cpp(121): warning C4018: '<' : incompatibilité signed/unsigned
-c:\users\olivier\documents\visual studio 2015\projects\clientpc\clientpc\clientpc.cpp(140): warning C4018: '<' : incompatibilité signed/unsigned
-c:\users\olivier\documents\visual studio 2015\projects\clientpc\clientpc\clientpc.cpp(150): warning C4018: '<' : incompatibilité signed/unsigned
-c:\users\olivier\documents\visual studio 2015\projects\clientpc\clientpc\clientpc.cpp(127): warning C4477: 'printf' : la chaîne de format '%c' nécessite un argument de type 'int', mais l'argument variadique 1 est de type 'char *'
+c:\users\olivier\documents\visual studio 2015\projects\clientpc\clientpc\clientpc.cpp(95): warning C4101: 'frame_buf' : variable locale non référencée
+c:\users\olivier\documents\visual studio 2015\projects\clientpc\clientpc\clientpc.cpp(87): warning C4101: 'bufferADC2' : variable locale non référencée
+c:\users\olivier\documents\visual studio 2015\projects\clientpc\clientpc\clientpc.cpp(93): warning C4101: 'index' : variable locale non référencée
+c:\users\olivier\documents\visual studio 2015\projects\clientpc\clientpc\clientpc.cpp(87): warning C4101: 'bufferADC3' : variable locale non référencée
+c:\users\olivier\documents\visual studio 2015\projects\clientpc\clientpc\clientpc.cpp(92): warning C4101: 'timeConversion' : variable locale non référencée
+c:\users\olivier\documents\visual studio 2015\projects\clientpc\clientpc\clientpc.cpp(87): warning C4101: 'bufferADC1' : variable locale non référencée
+c:\users\olivier\documents\visual studio 2015\projects\clientpc\clientpc\clientpc.cpp(163): warning C4244: '=' : conversion de 'WORD' en 'uint8_t', perte possible de données
+c:\users\olivier\documents\visual studio 2015\projects\clientpc\clientpc\clientpc.cpp(164): warning C4244: '=' : conversion de 'WORD' en 'uint8_t', perte possible de données
+c:\users\olivier\documents\visual studio 2015\projects\clientpc\clientpc\clientpc.cpp(165): warning C4244: '=' : conversion de 'WORD' en 'uint8_t', perte possible de données
+c:\users\olivier\documents\visual studio 2015\projects\clientpc\clientpc\clientpc.cpp(166): warning C4244: '=' : conversion de 'WORD' en 'uint8_t', perte possible de données
+c:\users\olivier\documents\visual studio 2015\projects\clientpc\clientpc\clientpc.cpp(167): warning C4244: '=' : conversion de 'WORD' en 'uint8_t', perte possible de données
+c:\users\olivier\documents\visual studio 2015\projects\clientpc\clientpc\clientpc.cpp(168): warning C4244: '=' : conversion de 'WORD' en 'uint8_t', perte possible de données
+c:\users\olivier\documents\visual studio 2015\projects\clientpc\clientpc\clientpc.cpp(169): warning C4244: '=' : conversion de 'WORD' en 'uint8_t', perte possible de données
   ClientPC.vcxproj -> C:\Users\olivier\Documents\Visual Studio 2015\Projects\ClientPC\Debug\ClientPC.exe
   ClientPC.vcxproj -> C:\Users\olivier\Documents\Visual Studio 2015\Projects\ClientPC\Debug\ClientPC.pdb (Full PDB)
