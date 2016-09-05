@@ -1,18 +1,11 @@
 ﻿  ClientPC.cpp
 c:\users\olivier\documents\visual studio 2015\projects\clientpc\clientpc\clientpc.cpp(13): warning C4005: '_CRT_SECURE_NO_WARNINGS' : redéfinition de macro
   c:\users\olivier\documents\visual studio 2015\projects\clientpc\clientpc\clientpc.cpp(13): note: arguments de ligne de commande : voir la définition précédente de '_CRT_SECURE_NO_WARNINGS'
-c:\users\olivier\documents\visual studio 2015\projects\clientpc\clientpc\clientpc.cpp(87): warning C4101: 'bufferADC2' : variable locale non référencée
-c:\users\olivier\documents\visual studio 2015\projects\clientpc\clientpc\clientpc.cpp(88): warning C4101: 'tempBuffer' : variable locale non référencée
-c:\users\olivier\documents\visual studio 2015\projects\clientpc\clientpc\clientpc.cpp(91): warning C4101: 'index' : variable locale non référencée
-c:\users\olivier\documents\visual studio 2015\projects\clientpc\clientpc\clientpc.cpp(87): warning C4101: 'bufferADC3' : variable locale non référencée
-c:\users\olivier\documents\visual studio 2015\projects\clientpc\clientpc\clientpc.cpp(90): warning C4101: 'timeConversion' : variable locale non référencée
-c:\users\olivier\documents\visual studio 2015\projects\clientpc\clientpc\clientpc.cpp(87): warning C4101: 'bufferADC1' : variable locale non référencée
+c:\users\olivier\documents\visual studio 2015\projects\clientpc\clientpc\clientpc.cpp(157): warning C4244: '=' : conversion de 'WORD' en 'uint8_t', perte possible de données
 c:\users\olivier\documents\visual studio 2015\projects\clientpc\clientpc\clientpc.cpp(158): warning C4244: '=' : conversion de 'WORD' en 'uint8_t', perte possible de données
-c:\users\olivier\documents\visual studio 2015\projects\clientpc\clientpc\clientpc.cpp(159): warning C4244: '=' : conversion de 'WORD' en 'uint8_t', perte possible de données
 c:\users\olivier\documents\visual studio 2015\projects\clientpc\clientpc\clientpc.cpp(160): warning C4244: '=' : conversion de 'WORD' en 'uint8_t', perte possible de données
 c:\users\olivier\documents\visual studio 2015\projects\clientpc\clientpc\clientpc.cpp(161): warning C4244: '=' : conversion de 'WORD' en 'uint8_t', perte possible de données
 c:\users\olivier\documents\visual studio 2015\projects\clientpc\clientpc\clientpc.cpp(162): warning C4244: '=' : conversion de 'WORD' en 'uint8_t', perte possible de données
 c:\users\olivier\documents\visual studio 2015\projects\clientpc\clientpc\clientpc.cpp(163): warning C4244: '=' : conversion de 'WORD' en 'uint8_t', perte possible de données
-c:\users\olivier\documents\visual studio 2015\projects\clientpc\clientpc\clientpc.cpp(164): warning C4244: '=' : conversion de 'WORD' en 'uint8_t', perte possible de données
   ClientPC.vcxproj -> C:\Users\olivier\Documents\Visual Studio 2015\Projects\ClientPC\Debug\ClientPC.exe
   ClientPC.vcxproj -> C:\Users\olivier\Documents\Visual Studio 2015\Projects\ClientPC\Debug\ClientPC.pdb (Full PDB)

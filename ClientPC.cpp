@@ -41,11 +41,11 @@ typedef struct sockaddr SOCKADDR;
 /*Defines*/
 #define PORT 23
 #define BOARDNAME 1
-#define ADC1 '1'
-#define ADC2 '2'
-#define ADC3 '3'
+#define ADC1 1
+#define ADC2 2
+#define ADC3 3
 #define SIZEDATA 1024
-#define SIZEFRAME 2*SIZEDATA+21
+#define SIZEFRAME 2*SIZEDATA+23
 
 
 union frame_u {
@@ -56,7 +56,7 @@ union frame_u {
 		uint32_t total_of_packet;
 		uint8_t day;
 		uint8_t month;
-		uint8_t year;
+		uint16_t year;
 		uint8_t hour;
 		uint8_t minutes;
 		uint8_t seconds;
@@ -68,14 +68,7 @@ union frame_u {
 };
 
 
-void formatbuffer(union frame_u frame, uint8_t adcnumber, uint32_t nbPacket, uint32_t numberTotalOfPackets);
-/**
-* @brief convert a table of chars into int
-* @param char charToConvert[] the table to convert
-* @param int index: the index in the table of char where there is the lengh of the number to convert
-* @retval uint_32 return the error code: 0= no errors; 1= wrong switch numbe
-*/
-
+frame_u formatbuffer( uint8_t adcnumber, uint32_t nbPacket, uint32_t numberTotalOfPackets);
 
 int main()
 {
@@ -84,11 +77,9 @@ int main()
 	SYSTEMTIME t;
 	GetSystemTime(&t);
 	char bufferServer[SIZEFRAME];
-	char bufferADC1[32], bufferADC2[32], bufferADC3[32];
-	char tempBuffer[SIZEFRAME];
-	
-	uint32_t timeConversion;
-	int index;
+
+	uint32_t number_total_of_packets;
+	uint32_t current_number_of_packet;
 
 	union frame_u frame_buf;
 
@@ -116,7 +107,7 @@ int main()
 			printf("Connecting to %s on the port %d\n", inet_ntoa(sin.sin_addr), htons(sin.sin_port));
 			printf("time: %dh %dmin %dsec\n",t.wHour,t.wMinute,t.wSecond);
 			/*If we receive a message we display it on the screen*/
-			while (bufferServer[0] != 'z') {
+			
 				if (recv(sock, bufferServer, sizeof(bufferServer), 0) != 0) {
 					printf("receiving data!\n");
 
@@ -124,15 +115,21 @@ int main()
 						frame_buf.frame_as_byte[i] = bufferServer[i];
 						printf("%d \t", frame_buf.frame_as_byte[i]);
 					}
-					printf("\n number %d, adc number: %d, time conversion: %d\n",frame_buf.frame_as_field.board, frame_buf.frame_as_field.adc_number, frame_buf.frame_as_field.data_lenght);
+					number_total_of_packets = frame_buf.frame_as_field.total_of_packet;
+					printf("\n number %d, adc number: %d, time conversion: %lu\n",frame_buf.frame_as_field.board, frame_buf.frame_as_field.adc_number, frame_buf.frame_as_field.data_lenght);
 					printf("%d, %d, %d\n", frame_buf.frame_as_field.day, frame_buf.frame_as_field.month, frame_buf.frame_as_field.year);
 				}
-			}
+			
 			
 		}
 		else {
 			printf("impossible to connect\n");
 		}
+
+		for (current_number_of_packet = 0; current_number_of_packet < number_total_of_packets; current_number_of_packet++) {
+			frame_buf = formatbuffer(ADC1, current_number_of_packet, number_total_of_packets);
+		}
+
 
 		/*Closing the socket*/
 		//closesocket(sock);
@@ -147,9 +144,11 @@ int main()
 	return EXIT_SUCCESS;
 }
 
- void formatbuffer(union frame_u frame, uint8_t adcnumber, uint32_t nbPacket, uint32_t numberTotalOfPackets) {
+ frame_u formatbuffer( uint8_t adcnumber, uint32_t nbPacket, uint32_t numberTotalOfPackets) {
 	SYSTEMTIME t;
 	GetSystemTime(&t);
+
+	frame_u frame;
 
 	frame.frame_as_field.board = BOARDNAME;
 	frame.frame_as_field.adc_number = adcnumber;
@@ -163,7 +162,7 @@ int main()
 	frame.frame_as_field.seconds = t.wSecond;
 	frame.frame_as_field.miliseconds = t.wMilliseconds;
 	
-
+	return frame;
 	
 }
 
