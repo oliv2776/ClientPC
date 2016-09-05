@@ -83,16 +83,14 @@ int main()
 	SOCKADDR_IN sin;
 	SYSTEMTIME t;
 	GetSystemTime(&t);
-	char bufferServer[SIZEFRAME] = "";
+	char bufferServer[SIZEFRAME];
 	char bufferADC1[32], bufferADC2[32], bufferADC3[32];
-	char tempBuffer[SIZEDATA];
-	for (int i = 0; i < SIZEDATA; i++) {
-		tempBuffer[i] = '0';
-	}
+	char tempBuffer[SIZEFRAME];
+	
 	uint32_t timeConversion;
 	int index;
 
-	union frame_u *frame_buf;
+	union frame_u frame_buf;
 
 #if defined (WIN32)
 	WSADATA WSAData;
@@ -122,15 +120,12 @@ int main()
 				if (recv(sock, bufferServer, sizeof(bufferServer), 0) != 0) {
 					printf("receiving data!\n");
 
-					if (bufferServer[1] == 1) {
-						printf("Start ADC1\n");
-					}
-
 					for (int i = 0; i < SIZEFRAME; i++) {
-						printf("%d\t", bufferServer[i]);
+						frame_buf.frame_as_byte[i] = bufferServer[i];
+						printf("%d \t", frame_buf.frame_as_byte[i]);
 					}
-					
-					
+					printf("\n number %d, adc number: %d, time conversion: %d\n",frame_buf.frame_as_field.board, frame_buf.frame_as_field.adc_number, frame_buf.frame_as_field.data_lenght);
+					printf("%d, %d, %d\n", frame_buf.frame_as_field.day, frame_buf.frame_as_field.month, frame_buf.frame_as_field.year);
 				}
 			}
 			
