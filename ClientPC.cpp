@@ -44,8 +44,12 @@ typedef struct sockaddr SOCKADDR;
 #define ADC1 1
 #define ADC2 2
 #define ADC3 3
+#define ADC1_2 4
+#define ADC1_3 5
+#define ADC2_3 6
+#define ADC1_2_3 7
 #define SIZEDATA 1024
-#define SIZEFRAME 2*SIZEDATA+23
+#define SIZEFRAME 2*SIZEDATA+24
 
 
 union frame_u {
@@ -80,6 +84,7 @@ int main()
 
 	uint32_t number_total_of_packets;
 	uint32_t current_number_of_packet;
+	int adc_number;
 
 	union frame_u frame_buf;
 
@@ -107,32 +112,90 @@ int main()
 			printf("Connecting to %s on the port %d\n", inet_ntoa(sin.sin_addr), htons(sin.sin_port));
 			printf("time: %dh %dmin %dsec\n",t.wHour,t.wMinute,t.wSecond);
 			/*If we receive a message we display it on the screen*/
-			
+			do {
 				if (recv(sock, bufferServer, sizeof(bufferServer), 0) != 0) {
 					printf("receiving data!\n");
 
 					for (int i = 0; i < SIZEFRAME; i++) {
 						frame_buf.frame_as_byte[i] = bufferServer[i];
-						printf("%d \t", frame_buf.frame_as_byte[i]);
 					}
 					number_total_of_packets = frame_buf.frame_as_field.total_of_packet;
+
+					/*
+					//To verify if the frame is correct.
+					printf("\n\n%lu\n", number_total_of_packets);
 					printf("\n number %d, adc number: %d, time conversion: %lu\n",frame_buf.frame_as_field.board, frame_buf.frame_as_field.adc_number, frame_buf.frame_as_field.data_lenght);
 					printf("%d, %d, %d\n", frame_buf.frame_as_field.day, frame_buf.frame_as_field.month, frame_buf.frame_as_field.year);
+					printf("\n%lu\t%lu\t%lu\n", frame_buf.frame_as_field.packet_number, frame_buf.frame_as_field.total_of_packet, frame_buf.frame_as_field.data_lenght);
+					*/
+					adc_number = frame_buf.frame_as_field.adc_number;
+					switch (adc_number) {
+					case ADC1:
+						//Start ADC for number_total_of_packet
+						printf("\nStart ADC number 1 for %lu packets\n", number_total_of_packets);
+						//Convert and send
+						printf("\ndone\n");
+						break;
+
+					case ADC2:
+						//Start ADC for number_total_of_packet
+						printf("\nStart ADC number 2 for %lu packets\n", number_total_of_packets);
+						//Convert and send
+						printf("\ndone\n");
+						break;
+
+					case ADC3:
+						//Start ADC for number_total_of_packet
+						printf("\nStart ADC number 3 for %lu packets\n", number_total_of_packets);
+						//Convert and send
+						printf("\ndone\n");
+						break;
+
+					case ADC1_2:
+						//Start ADC for number_total_of_packet
+						printf("\nStart ADC number 1 and 2 for %lu packets\n", number_total_of_packets);
+						//Convert and send
+						printf("\ndone\n");
+						break;
+
+					case ADC1_3:
+						//Start ADC for number_total_of_packet
+						printf("\nStart ADC number 1 and 3 for %lu packets\n", number_total_of_packets);
+						//Convert and send
+						printf("\ndone\n");
+						break;
+
+					case ADC2_3:
+						//Start ADC for number_total_of_packet
+						printf("\nStart ADC number 2 and 3 for %lu packets\n", number_total_of_packets);
+						//Convert and send
+						printf("\ndone\n");
+						break;
+
+					case ADC1_2_3:
+						//Start ADC for number_total_of_packet
+						printf("\nStart ADC number 1,2 and 3 for %lu packets\n", number_total_of_packets);
+						//Convert and send
+						printf("\ndone\n");
+						break;
+
+					default:
+						printf("\nerror, invalid adc number\n");
+						break;
+					}
+
+
 				}
-			
-			
+
+			} while (adc_number != 9);
 		}
 		else {
 			printf("impossible to connect\n");
 		}
 
-		for (current_number_of_packet = 0; current_number_of_packet < number_total_of_packets; current_number_of_packet++) {
-			frame_buf = formatbuffer(ADC1, current_number_of_packet, number_total_of_packets);
-		}
-
-
+		
 		/*Closing the socket*/
-		//closesocket(sock);
+		closesocket(sock);
 
 #if defined (WIN32)
 		WSACleanup();
@@ -161,6 +224,7 @@ int main()
 	frame.frame_as_field.minutes = t.wMinute;
 	frame.frame_as_field.seconds = t.wSecond;
 	frame.frame_as_field.miliseconds = t.wMilliseconds;
+	frame.frame_as_field.data_lenght = SIZEDATA;
 	
 	return frame;
 	
