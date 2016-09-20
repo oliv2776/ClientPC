@@ -116,41 +116,33 @@ int main()
 			do {
 				if (recv(sock, frame_buf.frame_as_byte, sizeof(frame_buf.frame_as_byte), 0) != 0) {
 					printf("receiving data!\n");
-
-					/*for (int i = 0; i < SIZEFRAME; i++) {
-						frame_buf.frame_as_byte[i] = bufferServer[i];
-					}*/
 					number_total_of_packets = frame_buf.frame_as_field.total_of_packet;
 
-					
+					/*
 					//To verify if the frame is correct.
-					/*printf("\n\n%lu %lu\n", number_total_of_packets,frame_buf.frame_as_field.total_of_packet);
+					printf("\n\n%lu %lu\n", number_total_of_packets,frame_buf.frame_as_field.total_of_packet);
 					printf("\n number %d, adc number: %d, time conversion: %lu\n",frame_buf.frame_as_field.board, frame_buf.frame_as_field.adc_number, frame_buf.frame_as_field.data_lenght);
 					printf("%d, %d, %d\n", frame_buf.frame_as_field.day, frame_buf.frame_as_field.month, frame_buf.frame_as_field.year);
 					printf("\n%lu\t%lu\t%lu\n", frame_buf.frame_as_field.packet_number, frame_buf.frame_as_field.total_of_packet, frame_buf.frame_as_field.data_lenght);
 					*/
+
 					adc_number = frame_buf.frame_as_field.adc_number;
 					switch (adc_number) {
 					case ADC1:
-
-
 						//Start ADC for number_total_of_packet
 						printf("\nStart ADC number 1 for %lu packets\n", number_total_of_packets);
-
 						for (uint32_t i = 0; i < number_total_of_packets; i++) {
 							send_data(sock, ADC1, i, number_total_of_packets, dat);
 						}
-
-						//Convert and send
 						printf("\ndone\n");
 						break;
-
-
 
 					case ADC2:
 						//Start ADC for number_total_of_packet
 						printf("\nStart ADC number 2 for %lu packets\n", number_total_of_packets);
-						//Convert and send
+						for (uint32_t i = 0; i < number_total_of_packets; i++) {
+							send_data(sock, ADC2, i, number_total_of_packets, dat);
+						}
 						printf("\ndone\n");
 						
 						break;
@@ -158,35 +150,45 @@ int main()
 					case ADC3:
 						//Start ADC for number_total_of_packet
 						printf("\nStart ADC number 3 for %lu packets\n", number_total_of_packets);
-						//Convert and send
+						for (uint32_t i = 0; i < number_total_of_packets; i++) {
+							send_data(sock, ADC3, i, number_total_of_packets, dat);
+						}
 						printf("\ndone\n");
 						break;
 
 					case ADC1_2:
 						//Start ADC for number_total_of_packet
 						printf("\nStart ADC number 1 and 2 for %lu packets\n", number_total_of_packets);
-						//Convert and send
+						for (uint32_t i = 0; i < number_total_of_packets; i++) {
+							send_data(sock, ADC1_2, i, number_total_of_packets, dat);
+						}
 						printf("\ndone\n");
 						break;
 
 					case ADC1_3:
 						//Start ADC for number_total_of_packet
 						printf("\nStart ADC number 1 and 3 for %lu packets\n", number_total_of_packets);
-						//Convert and send
+						for (uint32_t i = 0; i < number_total_of_packets; i++) {
+							send_data(sock, ADC1_3, i, number_total_of_packets, dat);
+						}
 						printf("\ndone\n");
 						break;
 
 					case ADC2_3:
 						//Start ADC for number_total_of_packet
 						printf("\nStart ADC number 2 and 3 for %lu packets\n", number_total_of_packets);
-						//Convert and send
+						for (uint32_t i = 0; i < number_total_of_packets; i++) {
+							send_data(sock, ADC2_3, i, number_total_of_packets, dat);
+						}
 						printf("\ndone\n");
 						break;
 
 					case ADC1_2_3:
 						//Start ADC for number_total_of_packet
 						printf("\nStart ADC number 1,2 and 3 for %lu packets\n", number_total_of_packets);
-						//Convert and send
+						for (uint32_t i = 0; i < number_total_of_packets; i++) {
+							send_data(sock, ADC1_2_3, i, number_total_of_packets, dat);
+						}
 						printf("\ndone\n");
 						break;
 
@@ -199,22 +201,23 @@ int main()
 				}
 
 			} while (adc_number != 9);
+			/*Closing the socket*/
+			closesocket(sock);
+
+#if defined (WIN32)
+			WSACleanup();
+#endif
+		}
+		/*Waiting for the user to type something to close*/
+		getchar();
+
 		}
 		else {
 			printf("impossible to connect\n");
 		}
 
 		
-		/*Closing the socket*/
-		closesocket(sock);
-
-#if defined (WIN32)
-		WSACleanup();
-#endif
-	}
-	/*Waiting for the user to type something to close*/
-	getchar();
-
+		
 	return EXIT_SUCCESS;
 }
 
@@ -269,15 +272,40 @@ frame_u formatbuffer(uint8_t boardNumber, uint8_t adcnumber, uint32_t nbPacket, 
  void send_data(SOCKET csocket, uint8_t adc_number,uint32_t packet_number, uint32_t total_of_packet, uint16_t data[SIZEDATA]) {
 	 frame_u frame;
 	 int socket_error;
+	 char tmp[200];
 	 frame = formatbuffer(BOARDNAME, adc_number, packet_number, total_of_packet);
 	 for (int i = 0; i < SIZEDATA; i++) {
 		 frame.frame_as_field.data[i] = data[i];
 	 }
-
+	 /*
+	 //To verifie if the correct values are written 
+	 sprintf(tmp, "%03u-%03u-%06u-%06u-%06u.dat", frame.frame_as_field.board, frame.frame_as_field.adc_number, frame.frame_as_field.day, frame.frame_as_field.month, frame.frame_as_field.year);
+	 printf("\n%s\n", tmp);
+	 */
 	 socket_error = send(csocket, frame.frame_as_byte, SIZEFRAME, 0);
-	 if (socket_error = SOCKET_ERROR)
+	 if (socket_error == SOCKET_ERROR)
 	 {
 		 printf("error while sending informations, error %d\n", socket_error);
+	 }
+	 else {
+		 if (socket_error != SIZEFRAME) {
+			 printf("wrong size sent %d instead of %d \n", socket_error, SIZEFRAME);
+		 }
+		 else {
+			 printf("frame sent\n");
+		 }
+	 }
+
+	 //To inform the user when the transfert is half way
+	 if (frame.frame_as_field.total_of_packet % 2 == 0) {
+		 if (frame.frame_as_field.packet_number / 2 == frame.frame_as_field.total_of_packet) {
+			 printf("\nprogress: 50%\n");
+		 }
+	 }
+	 else {
+		 if ((frame.frame_as_field.packet_number + 1) / 2 == (frame.frame_as_field.total_of_packet + 1) / 2) {
+			 printf("\nprogress:50%\n");
+		 }
 	 }
 
  }
