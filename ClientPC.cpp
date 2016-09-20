@@ -71,7 +71,8 @@ union frame_u {
 	char frame_as_byte[SIZEFRAME];
 };
 
-
+int send_command(int menu_choice, int socket_error, SOCKET csocket);
+void send_data(SOCKET csocket, uint8_t adc_number, uint32_t packet_number, uint32_t total_of_packet, uint16_t data[SIZEDATA]);
 frame_u formatbuffer(uint8_t boardNumber, uint8_t adcnumber, uint32_t nbPacket, uint32_t numberTotalOfPackets);
 int main()
 {
@@ -83,6 +84,7 @@ int main()
 
 	uint32_t number_total_of_packets;
 	uint32_t current_number_of_packet;
+	uint16_t dat[SIZEDATA];
 	int adc_number;
 
 	union frame_u frame_buf;
@@ -122,11 +124,11 @@ int main()
 
 					
 					//To verify if the frame is correct.
-					//printf("\n\n%lu %lu\n", number_total_of_packets,frame_buf.frame_as_field.total_of_packet);
+					/*printf("\n\n%lu %lu\n", number_total_of_packets,frame_buf.frame_as_field.total_of_packet);
 					printf("\n number %d, adc number: %d, time conversion: %lu\n",frame_buf.frame_as_field.board, frame_buf.frame_as_field.adc_number, frame_buf.frame_as_field.data_lenght);
 					printf("%d, %d, %d\n", frame_buf.frame_as_field.day, frame_buf.frame_as_field.month, frame_buf.frame_as_field.year);
 					printf("\n%lu\t%lu\t%lu\n", frame_buf.frame_as_field.packet_number, frame_buf.frame_as_field.total_of_packet, frame_buf.frame_as_field.data_lenght);
-					
+					*/
 					adc_number = frame_buf.frame_as_field.adc_number;
 					switch (adc_number) {
 					case ADC1:
@@ -136,15 +138,7 @@ int main()
 						printf("\nStart ADC number 1 for %lu packets\n", number_total_of_packets);
 
 						for (uint32_t i = 0; i < number_total_of_packets; i++) {
-							frame_buf = formatbuffer(BOARDNAME, ADC1, i, number_total_of_packets);
-							error = send(sock, frame_buf.frame_as_byte, SIZEFRAME, 0);
-							printf("%lu\n", i);
-							
-							
-							if (error = SOCKET_ERROR)
-							{
-								printf("error while sending informations, error %d\n", error);
-							}
+							send_data(sock, ADC1, i, number_total_of_packets, dat);
 						}
 
 						//Convert and send
@@ -158,6 +152,7 @@ int main()
 						printf("\nStart ADC number 2 for %lu packets\n", number_total_of_packets);
 						//Convert and send
 						printf("\ndone\n");
+						
 						break;
 
 					case ADC3:
@@ -271,3 +266,18 @@ frame_u formatbuffer(uint8_t boardNumber, uint8_t adcnumber, uint32_t nbPacket, 
 
  }
 
+ void send_data(SOCKET csocket, uint8_t adc_number,uint32_t packet_number, uint32_t total_of_packet, uint16_t data[SIZEDATA]) {
+	 frame_u frame;
+	 int socket_error;
+	 frame = formatbuffer(BOARDNAME, adc_number, packet_number, total_of_packet);
+	 for (int i = 0; i < SIZEDATA; i++) {
+		 frame.frame_as_field.data[i] = data[i];
+	 }
+
+	 socket_error = send(csocket, frame.frame_as_byte, SIZEFRAME, 0);
+	 if (socket_error = SOCKET_ERROR)
+	 {
+		 printf("error while sending informations, error %d\n", socket_error);
+	 }
+
+ }
